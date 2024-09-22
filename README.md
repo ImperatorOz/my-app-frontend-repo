@@ -33,7 +33,7 @@ To get started with this project, follow these steps:
 
 **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/augustus-project-frontend.git
+   git clone https://github.com/ImperatorOz/my-app-frontend-repo.git
    cd augustus-project-frontend
    ```
 **Install dependencies:**  
@@ -59,17 +59,6 @@ Fill out the feedback form with your name, email, and message.
 Click "Submit Feedback" to send your responses to the backend API.
 **Notifications:**  
 You will receive toast notifications for successful submissions or errors.
-
-**Folder Structure**
-/augustus-project-frontend
-├── /src
-│   ├── /components          # Reusable components (Header, FeedbackForm)
-│   ├── /styles             # CSS stylesheets for styling components
-│   ├── App.js              # Main application component
-│   ├── index.js            # Entry point of the application
-├── .env                    # Environment variables configuration
-├── package.json            # Project metadata and dependencies
-└── README.md               # Project documentation
 
 ## Contributing
 
