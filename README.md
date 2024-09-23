@@ -31,13 +31,16 @@ Welcome to the Augustus Project frontend! This application is designed to collec
 
 To get started with this project, follow these steps:
 
-**Clone the repository**:
+**Clone the repository**:  
+
    ```bash
    git clone https://github.com/ImperatorOz/my-app-frontend-repo.git
    cd augustus-project-frontend
    ```
+
 **Install dependencies:**  
 Make sure you have Node.js installed. Then run:  
+
 ```bash
 npm install axios react-toastify
 ```  
@@ -49,11 +52,12 @@ Create a .env file in the root directory of the project and add your API URL:
 
 **Usage**  
 **Start the development server:**  
+
 ```bash
 npm start
 ```
 
-This will start the app in development mode. Open http://localhost:3000 to view it in your browser.  
+This will start the app in development mode. Open `http://localhost:3000` to view it in your browser.  
 **Submit Feedback:**  
 Fill out the feedback form with your name, email, and message.
 Click "Submit Feedback" to send your responses to the backend API.
