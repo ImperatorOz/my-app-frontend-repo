@@ -35,7 +35,7 @@ To get started with this project, follow these steps:
 
    ```bash
    git clone https://github.com/ImperatorOz/my-app-frontend-repo.git
-   cd augustus-project-frontend
+   cd my-app-frontend-repo.git
    ```
 
 **Install dependencies:**  
