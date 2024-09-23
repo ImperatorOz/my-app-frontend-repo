@@ -57,7 +57,7 @@ p {
 }
 
 .feedback-form button {
-  background-color: #4CAF50;
+  background-color: #325288;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -67,5 +67,5 @@ p {
 }
 
 .feedback-form button:hover {
-  background-color: #45a049;
+  background-color: #8EA7E9;
 }
