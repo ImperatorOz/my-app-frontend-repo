@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: my-app-frontend Pipeline
 
 on:
   push:
