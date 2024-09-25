@@ -7,31 +7,39 @@ on:
 jobs:
   build-and-deploy:
     runs-on: self-hosted
-    
+
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.17.0'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build
-      run: npm run build
-      
-    - name: Test
-  if: steps.Build.outputs.exit_code == 0 && exists(./package.json) && exists(./package.json.scripts.test)
-  run: npm test
-      
-    - name: Deploy
-      env:
-        HOST: ${{ secrets.HOST }}
-        USER: jesse
-        PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-      run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" --delete ./build/ ${USER}@${HOST}:/home/jesse/app/frontend/
-        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd /home/jesse/app/frontend && npm install && pm2 restart app'
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.17.0'  # Consider using a Node.js version manager
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests (Optional)
+        if: steps.Build.outputs.exit_code == 0 && exists(./package.json) && exists(./package.json.scripts.test)
+        run: npm test
+
+      - name: Deploy
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: jesse
+          PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" --delete ./build/ ${USER}@${HOST}:/home/jesse/app/frontend/
+          ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
+            cd /home/jesse/app/frontend &&
+            npm ci  # Consider using npm ci for production dependencies
+            pm2 restart app || pm2 start npm --name "app" -- start --env production -- --port 3000
+          '
+
+      - name: Clean up
+        if: always()
+        run: rm -f private_key
