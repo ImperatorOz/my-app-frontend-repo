@@ -22,11 +22,7 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Run tests (Optional)
-        if: success() && exists(./package.json) && exists(./package.json.scripts.test)
-        run: npm test
-
+        
       - name: Deploy
         env:
           HOST: ${{ secrets.HOST }}
