@@ -9,12 +9,13 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.17.0'  # Consider using a Node.js version manager
+          node-version: '20.17.0'  # Ensure this version matches your local setup
 
       - name: Install dependencies
         run: npm ci
@@ -23,7 +24,7 @@ jobs:
         run: npm run build
 
       - name: Run tests (Optional)
-        if: steps.Build.outputs.exit_code == 0 && exists(./package.json) && exists(./package.json.scripts.test)
+        if: success() && exists(./package.json) && exists(./package.json.scripts.test)
         run: npm test
 
       - name: Deploy
@@ -36,7 +37,7 @@ jobs:
           rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" --delete ./build/ ${USER}@${HOST}:/home/jesse/app/frontend/
           ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
             cd /home/jesse/app/frontend &&
-            npm ci  # Consider using npm ci for production dependencies
+            npm ci --only=production &&  # Install only production dependencies
             pm2 restart app || pm2 start npm --name "app" -- start --env production -- --port 3000
           '
 
