@@ -17,7 +17,58 @@ jobs:
           node-version: '20.17.0'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm install
+          npm install @babel/plugin-proposal-private-property-in-object@7.21.11
+          npm ci
+
+      - name: Run tests
+        run: npm test || echo "No tests found, skipping..."
+
+      - name: Build
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+        run: npm run build
+        
+      - name: Deploy
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: jesse
+          PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" --delete ./build/ ${USER}@${HOST}:/home/jesse/app/frontend/
+          ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
+            cd /home/jesse/app/frontend &&
+            npm ci --only=production &&
+            pm2 restart app || pm2 start npm --name "app" -- start --env production -- --port 5000
+          '
+
+      - name: Clean up
+        if: always()
+        run: rm -f private_keyname: my-app-frontend Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-and-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.17.0'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install @babel/plugin-proposal-private-property-in-object@7.21.11
+          npm ci
 
       - name: Run tests
         run: npm test || echo "No tests found, skipping..."
