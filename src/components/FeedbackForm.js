@@ -28,7 +28,7 @@ function FeedbackForm() {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/feedback`, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/feedback`, {
         name,
         email,
         message
