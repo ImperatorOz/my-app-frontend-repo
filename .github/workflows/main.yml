@@ -21,8 +21,6 @@ jobs:
         run: npm ci
 
       - name: Build
-        env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
         run: npm run build
 
       - name: Install SSH key
