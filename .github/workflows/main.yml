@@ -6,7 +6,8 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest  # Changed from self-hosted to ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,18 +22,18 @@ jobs:
 
       - name: Build
         env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}  # Ensure this is set in GitHub secrets
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
         run: npm run build
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Deploy
         env:
-          HOST: ${{ secrets.HOST }}  # Ensure this is set in GitHub secrets
-          USER: jesse                 # Your EC2 username
-          PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}  # Ensure this is set in GitHub secrets
+          HOST: ${{ secrets.HOST }}
+          USER: jesse
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" --delete ./build/ ${USER}@${HOST}:/home/jesse/app/frontend/
-
-      - name: Clean up
-        if: always()
-        run: rm -f private_key
+          rsync -avz --delete ./build/ ${USER}@${HOST}:/home/jesse/app/frontend/
