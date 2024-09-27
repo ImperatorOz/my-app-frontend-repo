@@ -28,7 +28,7 @@ function FeedbackForm() {
     if (!validateForm()) return;
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/feedback`, {
+      await axios.post('/api/feedback', { // Use relative URL here
         name,
         email,
         message
